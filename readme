@@ -1,0 +1,4 @@
+(Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& "c:\Users\suhan\Documents\project 2\.venv\Scripts\Activate.ps1")
+python train.py 
+uvicorn app:app --reload  
+streamlit run dashboard.py   
