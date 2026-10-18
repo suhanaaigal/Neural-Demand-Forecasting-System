@@ -128,12 +128,21 @@ def render() -> None:
                     FORECAST_ENDPOINT.rsplit("/", 1)[0] + "/openapi.json",
                     timeout=2,
                 )
-                if response.ok:
-                    st.success("Forecasting API is reachable.")
-                    st.session_state["forecast_service_online"] = True
-                else:
+                if not response.ok:
                     st.warning(f"Forecasting API responded with HTTP {response.status_code}.")
                     st.session_state["forecast_service_online"] = False
+                elif "application/json" not in response.headers.get("content-type", "").lower():
+                    st.warning("Forecast URL is not serving the FastAPI prediction service. Check DEMAND_FORECAST_URL.")
+                    st.session_state["forecast_service_online"] = False
+                else:
+                    document = response.json()
+                    paths = document.get("paths", {}) if isinstance(document, dict) else {}
+                    if isinstance(paths, dict) and "/predict_sequence" in paths:
+                        st.success("Forecasting API is reachable.")
+                        st.session_state["forecast_service_online"] = True
+                    else:
+                        st.warning("Forecast URL does not expose the expected /predict_sequence endpoint.")
+                        st.session_state["forecast_service_online"] = False
             except requests.RequestException:
                 st.error("Forecasting API is not reachable. Start the backend to generate forecasts.")
                 st.session_state["forecast_service_online"] = False
