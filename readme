@@ -1,4 +1,16 @@
-(Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& "c:\Users\suhan\Documents\project 2\.venv\Scripts\Activate.ps1")
-python train.py 
-uvicorn app:app --reload  
-streamlit run dashboard.py   
+Run Demand Intelligence from the repository root.
+
+Terminal 1 — forecasting API:
+python -m uvicorn app:app --host 127.0.0.1 --port 8000
+
+Terminal 2 — Streamlit dashboard:
+python -m streamlit run dashboard.py
+
+Open the dashboard URL printed by Streamlit (normally http://localhost:8501).
+The dashboard navigation provides separate overview, forecasting, inventory,
+SKU registry, portfolio, analytics, and reports/bulk-operation workspaces.
+
+The database currently stores sales transactions and product/category metadata.
+Inventory balances, purchase orders, and external notification delivery are
+not connected; replenishment quantities are recommendations based on the stock
+assumptions entered for a planning run.
