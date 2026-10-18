@@ -21,6 +21,7 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 ROOT = Path(__file__).resolve().parent.parent
 DATABASE = ROOT / "corporate_sales.db"
 FORECAST_ENDPOINT = os.environ.get("DEMAND_FORECAST_URL", "http://127.0.0.1:8000/predict_sequence")
+FORECAST_TIMEOUT_SECONDS = float(os.environ.get("DEMAND_FORECAST_TIMEOUT_SECONDS", "20"))
 CORE_CATEGORIES = ["Electronics", "Groceries", "Pharmaceuticals", "Home & Kitchen", "Apparel"]
 ATTENTION_PROFILE = {
     "Historical price": 0.12,
@@ -189,7 +190,7 @@ def classify_category(product_id: int, category: str) -> tuple[str, str, str]:
 
 def request_forecast(payload: dict[str, Any]) -> dict[str, Any]:
     try:
-        response = requests.post(FORECAST_ENDPOINT, json=payload, timeout=20)
+        response = requests.post(FORECAST_ENDPOINT, json=payload, timeout=FORECAST_TIMEOUT_SECONDS)
         response.raise_for_status()
     except requests.RequestException as exc:
         raise RuntimeError(f"Forecast service is unavailable: {exc}") from exc

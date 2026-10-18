@@ -1,0 +1,8 @@
+fastapi
+numpy
+pandas
+reportlab
+requests
+streamlit
+torch
+uvicorn

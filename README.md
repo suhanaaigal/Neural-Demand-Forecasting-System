@@ -32,3 +32,16 @@ ABC/XYZ portfolio, pricing analytics, and reports/bulk operations.
 Inventory balances, purchase orders, and external notification delivery are
 not stored or connected by the current database/API; inventory recommendations
 use the stock assumptions entered for a planning run.
+
+## Deploy on Render
+
+The root `render.yaml` Blueprint defines two web services: the FastAPI forecast
+API and the Streamlit dashboard. In Render, create a Blueprint from this
+repository and apply the `render.yaml` configuration. The dashboard service is
+named `neural-demand-forecasting-system`, and calls the API service at
+`neural-demand-forecasting-api.onrender.com`.
+
+Both services use Render's free plan by default. Free services can sleep when
+idle, so the first forecast request may take longer while the API starts. The
+SQLite database is included as demo data; changes made to it on Render are not
+persistent across service restarts or redeployments.
